@@ -153,7 +153,7 @@ v2ray_config() {
 	# clear
 	echo
 	while :; do
-		echo -e "请选择 "$yellow"V2Ray"$none" 传输协议 [${magenta}1-${#transport[*]}$none]"
+		echo -e "Choose "$yellow"V2Ray"$none" Transfer Protocol [${magenta}1-${#transport[*]}$none]"
 		echo
 		for ((i = 1; i <= ${#transport[*]}; i++)); do
 			Stream="${transport[$i - 1]}"
@@ -166,16 +166,15 @@ v2ray_config() {
 			fi
 		done
 		echo
-		echo "备注1: 含有 [dynamicPort] 的即启用动态端口.."
-		echo "备注2: [utp | srtp | wechat-video | dtls | wireguard] 分别伪装成 [BT下载 | 视频通话 | 微信视频通话 | DTLS 1.2 数据包 | WireGuard 数据包]"
+		echo "Remarks1: contain [dynamicPort] Dynamic port.."
+		echo "Remarks2: [utp | srtp | wechat-video | dtls | wireguard] Disguised as [BT download | video call | WeChat video call | DTLS 1.2 packet | WireGuard packet]"
 		echo
-		read -p "$(echo -e "(默认协议: ${cyan}TCP$none)"):" v2ray_transport
-		[ -z "$v2ray_transport" ] && v2ray_transport=1
+		v2ray_transport=2
 		case $v2ray_transport in
 		[1-9] | [1-2][0-9] | 3[0-3])
 			echo
 			echo
-			echo -e "$yellow V2Ray 传输协议 = $cyan${transport[$v2ray_transport - 1]}$none"
+			echo -e "$yellow V2Ray Transfer Protocol = $cyan${transport[$v2ray_transport - 1]}$none"
 			echo "----------------------------------------------------------------"
 			echo
 			break
@@ -195,14 +194,13 @@ v2ray_port_config() {
 	*)
 		local random=$(shuf -i20001-65535 -n1)
 		while :; do
-			echo -e "请输入 "$yellow"V2Ray"$none" 端口 ["$magenta"1-65535"$none"]"
-			read -p "$(echo -e "(默认端口: ${cyan}${random}$none):")" v2ray_port
-			[ -z "$v2ray_port" ] && v2ray_port=$random
+			echo -e "Please enter "$yellow"V2Ray"$none" port ["$magenta"1-65535"$none"]"
+			v2ray_port=80
 			case $v2ray_port in
 			[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9] | [1-5][0-9][0-9][0-9][0-9] | 6[0-4][0-9][0-9][0-9] | 65[0-4][0-9][0-9] | 655[0-3][0-5])
 				echo
 				echo
-				echo -e "$yellow V2Ray 端口 = $cyan$v2ray_port$none"
+				echo -e "$yellow V2Ray port = $cyan$v2ray_port$none"
 				echo "----------------------------------------------------------------"
 				echo
 				break
@@ -222,21 +220,21 @@ v2ray_port_config() {
 v2ray_dynamic_port_start() {
 
 	while :; do
-		echo -e "请输入 "$yellow"V2Ray 动态端口开始 "$none"范围 ["$magenta"1-65535"$none"]"
-		read -p "$(echo -e "(默认开始端口: ${cyan}10000$none):")" v2ray_dynamic_port_start_input
+		echo -e "Please enter "$yellow"V2Ray Dynamic port start "$none"范围 ["$magenta"1-65535"$none"]"
+		read -p "$(echo -e "(Default start port: ${cyan}10000$none):")" v2ray_dynamic_port_start_input
 		[ -z $v2ray_dynamic_port_start_input ] && v2ray_dynamic_port_start_input=10000
 		case $v2ray_dynamic_port_start_input in
 		$v2ray_port)
 			echo
-			echo " 不能和 V2Ray 端口一毛一样...."
+			echo " Not the same as the V2Ray port...."
 			echo
-			echo -e " 当前 V2Ray 端口：${cyan}$v2ray_port${none}"
+			echo -e " Current V2Ray port：${cyan}$v2ray_port${none}"
 			error
 			;;
 		[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9] | [1-5][0-9][0-9][0-9][0-9] | 6[0-4][0-9][0-9][0-9] | 65[0-4][0-9][0-9] | 655[0-3][0-5])
 			echo
 			echo
-			echo -e "$yellow V2Ray 动态端口开始 = $cyan$v2ray_dynamic_port_start_input$none"
+			echo -e "$yellow V2Ray Dynamic port start = $cyan$v2ray_dynamic_port_start_input$none"
 			echo "----------------------------------------------------------------"
 			echo
 			break
@@ -427,9 +425,8 @@ auto_tls_config() {
 path_config_ask() {
 	echo
 	while :; do
-		echo -e "是否开启 网站伪装 和 路径分流 [${magenta}Y/N$none]"
-		read -p "$(echo -e "(默认: [${cyan}N$none]):")" path_ask
-		[[ -z $path_ask ]] && path_ask="n"
+		echo -e "Whether to enable website camouflage and path diversion [${magenta}Y/N$none]"
+		path_ask="n"
 
 		case $path_ask in
 		Y | y)
@@ -439,7 +436,7 @@ path_config_ask() {
 		N | n)
 			echo
 			echo
-			echo -e "$yellow 网站伪装 和 路径分流 = $cyan 不想配置 $none"
+			echo -e "$yellow Website camouflage and path diversion = $cyan Don't want to configure $none"
 			echo "----------------------------------------------------------------"
 			echo
 			break
@@ -453,21 +450,21 @@ path_config_ask() {
 path_config() {
 	echo
 	while :; do
-		echo -e "请输入想要 ${magenta} 用来分流的路径 $none , 例如 /233blog , 那么只需要输入 233blog 即可"
-		read -p "$(echo -e "(默认: [${cyan}233blog$none]):")" path
+		echo -e "Please enter what you want ${magenta} Path used to divert $none , For example /233blog, then you only need to enter 233blog"
+		read -p "$(echo -e "(default: [${cyan}233blog$none]):")" path
 		[[ -z $path ]] && path="233blog"
 
 		case $path in
 		*[/$]*)
 			echo
-			echo -e " 由于这个脚本太辣鸡了..所以分流的路径不能包含$red / $none或$red $ $none这两个符号.... "
+			echo -e " Because this script is too spicy...so the diversion path cannot include$red / $none或$red $ $none这两个符号.... "
 			echo
 			error
 			;;
 		*)
 			echo
 			echo
-			echo -e "$yellow 分流的路径 = ${cyan}/${path}$none"
+			echo -e "$yellow Diverging path = ${cyan}/${path}$none"
 			echo "----------------------------------------------------------------"
 			echo
 			break
@@ -510,9 +507,8 @@ proxy_site_config() {
 blocked_hosts() {
 	echo
 	while :; do
-		echo -e "是否开启广告拦截(会影响性能) [${magenta}Y/N$none]"
-		read -p "$(echo -e "(默认 [${cyan}N$none]):")" blocked_ad
-		[[ -z $blocked_ad ]] && blocked_ad="n"
+		echo -e "Whether to enable ad blocking (will affect performance) [${magenta}Y/N$none]"
+		blocked_ad="n"
 
 		case $blocked_ad in
 		Y | y)
@@ -1011,32 +1007,19 @@ esac
 clear
 while :; do
 	echo
-	echo "........... V2Ray 一键安装脚本 & 管理脚本 by 233v2.com .........."
+	echo "........... V2Ray One-click installation script & management script by 233v2.com .........."
 	echo
-	echo "帮助说明: https://233v2.com/post/1/"
+	echo "Help description: https://233v2.com/post/1/"
 	echo
-	echo "搭建教程: https://233v2.com/post/2/"
+	echo "Build tutorial: https://233v2.com/post/2/"
 	echo
-	echo " 1. 安装"
+	echo " 1. Install"
 	echo
-	echo " 2. 卸载"
+	echo " 2. Uninstall"
 	echo
 	if [[ $local_install ]]; then
-		echo -e "$yellow 温馨提示.. 本地安装已启用 ..$none"
+		echo -e "$yellow Reminder: Local installation is enabled ..$none"
 		echo
 	fi
-	read -p "$(echo -e "请选择 [${magenta}1-2$none]:")" choose
-	case $choose in
-	1)
-		install
-		break
-		;;
-	2)
-		uninstall
-		break
-		;;
-	*)
-		error
-		;;
-	esac
+	install
 done
