@@ -909,7 +909,7 @@ show_config_info() {
 	_v2_args
 	_v2_info
 	_load ss-info.sh
-
+	exit 0
 }
 
 install() {
